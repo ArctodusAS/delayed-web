@@ -1,0 +1,60 @@
+%table.table.table-bordered
+  %thead
+    %tr
+      %th Id
+      %th Status
+      %th Queue
+      %th Created at
+      %th Run at
+      %th Cron
+      %th Attemps
+      %th Last error
+      %th Last run took
+      %th Last run memory
+      %th Handler
+      %th
+  %tbody
+    - if jobs.any?
+      - jobs.sort_by(&:run_at).each do |job|
+        %tr
+          %td= link_to "##{job.id}", job_path(job)
+          %td
+            %span{:class => status_dom_class(job.status)}
+              = job.status
+          %td= job.queue
+          %td= l(job.created_at, format: :short)
+          %td{style: 'white-space: nowrap'}
+            = l(job.run_at, format: :short)
+            - color = job.run_at < 1.minute.ago ? 'red' : '#AAA'
+            %span{style: "font-size: 11px; color: #{color}"}= time_ago_in_words job.run_at
+          %td{style: 'white-space: nowrap'}
+            - if job.cron.present?
+              = link_to job.cron, "https://crontab.guru/##{job.cron}"
+          %td= job.attempts
+          %td
+            - if job.last_error.present?
+              = link_to truncate(job.last_error), job_path(job)
+            - else
+              %span.label.label-success Empty
+          %td
+            - if job.last_run_took
+              #{job.last_run_took.round(2)}sec
+          %td
+            - if job.last_run_mem_mb
+              #{job.last_run_mem_mb.to_i}MB
+          %td{style: 'font-size: 11px'}= job.handler
+          %td
+            - if job.can_queue?
+              = button_to 'Run next', queue_job_path(job), method: :put, class: 'btn btn-mini btn-action', form_class: 'btn-rails pull-left'
+            - if job.can_destroy?
+              = button_to 'Delete', job_path(job), method: :delete, class: 'btn btn-danger btn-mini btn-action', form_class: 'btn-rails pull-right', onclick: "return confirm('Are you sure you want to delete this job?')"
+            - if job.locked_at
+              Locked #{l job.locked_at, format: :short}
+              %br/
+              = time_ago_in_words job.locked_at
+              %br/
+              #{job.locked_by}
+    - else
+      %tr
+        %td{:colspan => "7"}
+          The queue is empty.

@@ -1,6 +1,10 @@
 module Delayed
   module Web
     class JobsController < Delayed::Web::ApplicationController
+      def index
+        @workers = `ps aux | grep delayed`.split("\n").collect{|p| p unless p.include?('grep')}.compact
+      end
+
       def queue
         if job.can_queue?
           job.queue!

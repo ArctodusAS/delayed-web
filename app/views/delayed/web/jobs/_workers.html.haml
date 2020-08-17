@@ -1,0 +1,6 @@
+%p
+  %h3 Workers
+  - if @workers.empty?
+    %div{style: 'font-weight: bold; background-color: red; color: white;'} None
+  - else
+    = @workers.join("<br />").html_safe

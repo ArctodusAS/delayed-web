@@ -1,0 +1,10 @@
+!!!
+%html{:lang => I18n.locale}
+  %head
+    = stylesheet_link_tag 'delayed/web/application'
+  %body
+    .container{style: 'width: auto; padding: 0 6em;'}
+      - flash.each do |type, message|
+        %div{:class => "alert #{flash_dom_class(type)}"}
+          = flash[type]
+      = yield

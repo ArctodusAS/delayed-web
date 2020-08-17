@@ -1,0 +1,6 @@
+.page-header
+  %h3
+    Server time #{l(Time.now, format: :short)},
+    #{Delayed::Job.count} jobs,
+    #{Delayed::Job.where.not(locked_at: nil).count} running,
+    #{Delayed::Job.where.not(last_error: nil).count} failed
