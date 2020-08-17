@@ -6,7 +6,7 @@ module Delayed
       end
 
       def self.all
-        jobs = Delayed::Job.order('id DESC').limit(100)
+        jobs = Delayed::Job.order('id DESC').limit(1000)
         Enumerator.new do |enumerator|
           jobs.each do |job|
             enumerator.yield decorate(job)
