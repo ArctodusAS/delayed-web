@@ -38,9 +38,9 @@ module Delayed
       def jobs
         @jobs ||= case params[:scope]
                   when 'running'
-                    then Delayed::Job.where.not(locked_at: nil)
+                    then Delayed::Web::Job.where.not(locked_at: nil)
                   when 'failed'
-                    then Delayed::Job.where.not(last_error: nil)
+                    then Delayed::Web::Job.where.not(last_error: nil)
                   else
                     Delayed::Web::Job.all
                   end
