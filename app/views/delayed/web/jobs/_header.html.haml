@@ -1,6 +1,11 @@
 .page-header
   %h3
-    Server time #{l(Time.now, format: :short)},
-    #{Delayed::Job.count} jobs,
-    #{Delayed::Job.where.not(locked_at: nil).count} running,
-    #{Delayed::Job.where.not(last_error: nil).count} failed
+    Server time #{l(Time.now, format: :short)}
+    = link_to jobs_path(scope: nil) do
+      #{Delayed::Job.count} jobs
+    \|
+    = link_to jobs_path(scope: :running) do
+      #{Delayed::Job.where.not(locked_at: nil).count} running
+    \|
+    = link_to jobs_path(scope: :failed) do
+      #{Delayed::Job.where.not(last_error: nil).count} failed
