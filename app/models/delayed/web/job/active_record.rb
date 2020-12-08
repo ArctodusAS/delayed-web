@@ -5,8 +5,16 @@ module Delayed
         decorate Delayed::Job.find(*args)
       end
 
-      def self.all
-        jobs = Delayed::Job.order('id DESC').limit(1000)
+      def self.all(scope = nil)
+        jobs = case scope
+                  when 'running'
+                    then Delayed::Job.where.not(locked_at: nil)
+                  when 'failed'
+                    then Delayed::Job.where.not(last_error: nil)
+                  else
+                    Delayed::Job.all
+                  end
+        jobs = jobs.order('id DESC').limit(1000)
         Enumerator.new do |enumerator|
           jobs.each do |job|
             enumerator.yield decorate(job)

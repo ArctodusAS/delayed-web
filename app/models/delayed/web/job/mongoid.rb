@@ -6,7 +6,7 @@ module Delayed
         decorate Delayed::Job.find(*args)
       end
 
-      def self.all
+      def self.all(scope = nil)
         jobs = Delayed::Job.order_by(created_at: 'desc').limit(100)
         Enumerator.new do |enumerator|
           jobs.each do |job|

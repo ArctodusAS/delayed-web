@@ -41,7 +41,7 @@ module Delayed
         decorate build_failed
       end
 
-      def self.all
+      def self.all(scope = nil)
         [build_executing, build_failed, build_queued].map do |job|
           decorate job
         end

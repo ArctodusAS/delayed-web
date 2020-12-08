@@ -36,14 +36,7 @@ module Delayed
       helper_method :job
 
       def jobs
-        @jobs ||= case params[:scope]
-                  when 'running'
-                    then Delayed::Web::Job.where.not(locked_at: nil)
-                  when 'failed'
-                    then Delayed::Web::Job.where.not(last_error: nil)
-                  else
-                    Delayed::Web::Job.all
-                  end
+        @jobs ||= Delayed::Web::Job.all(params[:scope])
       end
       helper_method :jobs
 
