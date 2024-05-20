@@ -9,3 +9,9 @@
     \|
     = link_to jobs_path(scope: :failed) do
       #{Delayed::Job.where.not(last_error: nil).count} failed
+
+    - if (queues = Delayed::Job.distinct.pluck(:queue)).length > 1
+      - queues.each do |queue|
+        \|
+        = link_to jobs_path(queue: queue) do
+          #{Delayed::Job.where(queue: queue).count} #{queue}

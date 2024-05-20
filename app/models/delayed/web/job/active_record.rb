@@ -5,7 +5,7 @@ module Delayed
         decorate Delayed::Job.find(*args)
       end
 
-      def self.all(scope = nil)
+      def self.all(scope = nil, queue = nil)
         jobs = case scope
                   when 'running'
                     then Delayed::Job.where.not(locked_at: nil)
@@ -14,6 +14,7 @@ module Delayed
                   else
                     Delayed::Job.all
                   end
+        jobs = jobs.where(queue: queue) if queue
         jobs = jobs.order('id DESC').limit(1000)
         Enumerator.new do |enumerator|
           jobs.each do |job|

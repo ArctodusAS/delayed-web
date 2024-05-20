@@ -36,7 +36,8 @@ module Delayed
       helper_method :job
 
       def jobs
-        @jobs ||= Delayed::Web::Job.all(params[:scope])
+        return @jobs if @jobs
+        scope = Delayed::Web::Job.all(params[:scope], params[:queue])
       end
       helper_method :jobs
 
