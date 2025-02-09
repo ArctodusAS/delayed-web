@@ -1,7 +1,8 @@
 !!!
 %html{:lang => I18n.locale}
   %head
-    = stylesheet_link_tag 'delayed/web/application'
+    = stylesheet_link_tag "delayed/web/bootstrap"
+    = stylesheet_link_tag "delayed/web/application"
   %body
     .container{style: 'width: auto; padding: 0 6em;'}
       - flash.each do |type, message|
